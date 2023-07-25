@@ -22,7 +22,7 @@ app.use(express.json());
 // NOTE : Add your routes here
 
 app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
+  res.send(`Hello, this is mad Unyu`);
 });
 
 app.get("/api/greetings", (req, res, next) => {
