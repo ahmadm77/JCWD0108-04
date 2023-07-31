@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type : DataTypes.INTEGER,
       allowNull : false
     },
-    produtQyu : {
+    productQty : {
       type : DataTypes.INTEGER,
       allowNull : false
     },

@@ -12,19 +12,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       transaction.belongsTo(models.user);
-      transaction.hasMany(models.transDetail);
+      transaction.hasMany(models.transDetail, {foreignKey : 'transactionId'});
     }
   }
   transaction.init({
+    transactionId : {
+      type : DataTypes.STRING,
+      primaryKey : true
+    },
     total: {
       type : DataTypes.INTEGER,
       allowNull : false
     },
-    buyerAmmount : {
+    cash : {
       type : DataTypes.INTEGER,
       allowNull : false
     },
-    buyerChange : {
+    change : {
       type : DataTypes.INTEGER,
       allowNull : false,
       defaultValue : true,
