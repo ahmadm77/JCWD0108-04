@@ -7,3 +7,4 @@ const multerUpload = require('../midleware/multer')
 router.get('/',productController.getProduct)
 router.post('/addpro',verifyToken,multerUpload('./public/product').single(file),productController.addProduct)
 
+module.exports = router
