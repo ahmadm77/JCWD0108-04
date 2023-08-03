@@ -2,26 +2,38 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { userRouter, productrouter } = require("../router");
+
+const { userRouter, adminRouter,productrouter } = require("../router");
+
 const db = require('../models');
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
-
 app.use(express.json());
+app.use(cors());
+app.use(express.static("./assets"));
+
+// app.use(
+//   cors({
+//     origin: [
+//       process.env.WHITELISTED_DOMAIN &&
+//         process.env.WHITELISTED_DOMAIN.split(","),
+//     ],
+//   })
+// );
+
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
+
+
+app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
+
+
+
 app.get("/api", (req, res) => {
   res.send(`Hello, this is mad Unyu`);
 });

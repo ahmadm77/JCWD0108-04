@@ -1,12 +1,13 @@
 
-const productController = require('../controller/productController')
-const { multerUpload } = require('../midleware/multer')
+const {productController} = require('../controller')
+const { verifyToken } = require('../midleware/auth')
 const router = require('express').Router()
-const verifyToken = require('../midleware/auth')
+
+const { multerUpload } = require('../midleware/multer')
 
 
 router.get('/',productController.getProduct)
-router.post('/addpro',verifyToken, multerUpload('./public/product', 'product').single('file'), productController.addProduct)
+router.post('/addpro',   multerUpload('./assets/productImg', 'product').single('file'), productController.addProduct)
 
 
 module.exports = router

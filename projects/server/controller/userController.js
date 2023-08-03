@@ -1,35 +1,63 @@
 
-
-const useController = {
-  greet : async (req, res) => {
-    res.send('hello world');
-  },
-  forgotPassword : async (req,res)=>{
+const db = require('../models');
+const user = db.user;
+const product = db.product;
+const category = db.category;
+const jwt = require('jsonwebtoken');
+const enc = require('bcrypt');
+const userController = {
+  login : async (req, res) => {
     try {
-      const {email} = req.body;
-      const isEmailExist = await user.findOne({
-        where : {
-          email : email
-        }
+      const {username, password} = req.body;
+      const isExist = await user.findOne({
+        where : {username : username}
       });
-      if (isEmailExist !== null) {
-        const {id, username, email} = isEmailExist;
-        const token = jwt.sign({id, username, email}, 'ahmad123');
-        await transporter.sendMail({
-          from : 'ahmadmawardi007@gmail.com',
-          to : email,
-          subject : 'test',
-          html :'<h1> Success </h1>'
-        })
-        res.status(200).send({
-          message : 'check your mail',
-          token
-        });
+
+      if (isExist == null) {throw({message:'User not found!'})}
+      // const isValid =  await enc.compare(password, isExist.password);
+      // if (!isValid) {throw({messge:'Wrong Password'})}
+      const payload = {id : isExist.id, username : isExist.username}
+      const token = jwt.sign(payload, 'minpro3');
+      res.status(200).send({
+        message : 'Login success',
+        token
+      });
+    } catch (error) {
+      res.status(400).send(error); 
+    }
+  },
+  getProducts : async (req, res) => {
+    try {
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 10;
+      // console.log(req.query.categoryId);
+      const clause = [];
+      if (req.query.categoryId) {
+        clause.push({categoryId: req.query.categoryId})
       }
+      console.log(clause);
+      const getProducts = await product.findAll({
+        where : clause,
+        limit,
+        offset : limit * (page - 1)
+      });
+      const total = await product.count({
+        where : clause
+      });
+
+      console.log(total);
+      res.status(200).send({
+        status : 'OK',
+        currentPage : page,
+        totalPage : Math.ceil(total/limit),
+        getProducts
+      });
+
     } catch (error) {
       console.log(error);
       res.status(400).send(error);
     }
+
   },
   changeProfile : async (req, res)=>{
     try {
@@ -44,10 +72,26 @@ const useController = {
       res.status(200).send({
         message : 'sukses'
       });
+
+
+  }catch (error){
+    res.status(400).send(error)
+  }
+},
+  getCategories : async (req, res) => {
+    try {
+      const getCategories = await category.findAll({
+        order : [['id', 'ASC']]
+      });
+      res.status(200).send({
+        status : 'OK',
+        getCategories
+      })
+
     } catch (error) {
       res.status(400).send(error);
     }
   }
 }
 
-module.exports = useController;
+module.exports = userController;
