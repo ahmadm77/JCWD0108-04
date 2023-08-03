@@ -1,3 +1,5 @@
+
+
 const useController = {
   greet : async (req, res) => {
     res.send('hello world');
@@ -29,6 +31,23 @@ const useController = {
       res.status(400).send(error);
     }
   },
+  changeProfile : async (req, res)=>{
+    try {
+      if (req.file == undefined) {
+        throw({message : 'file kosong'});
+      }
+      const setData = await user.update(
+        {profileImg : req.file.filename},
+        {where :{
+          id : req.user.id
+      }});
+      res.status(200).send({
+        message : 'sukses'
+      });
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
 }
 
 module.exports = useController;

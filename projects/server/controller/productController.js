@@ -8,9 +8,9 @@ const { Op, Sequelize } = require('sequelize');
 module.exports = {
     addProduct: async (req, res) => {
         try {
-            const { productName, productPrice, productDesc, CategoryId, productQyu } = req.body;
+            const { productName, productPrice, productDesc, CategoryId, productQty } = req.body;
             const productImg = req.file.filename;
-            const result = await product.create({ productImg, productName, productPrice, productDesc, CategoryId, productQyu });
+            const result = await product.create({ productImg, productName, productPrice, productDesc, CategoryId, productQty });
             res.status(200).send("Success to add product");
         } catch (error) {
             res.status(400).send({ error, msg: "Failed to add product" });
@@ -50,6 +50,7 @@ module.exports = {
                     'productDesc', // Fixed productDescription to productDesc
                     'productPrice',
                     'CategoryId',
+                    'productQty',
                     'isDeleted',
                 ],
                 where: condition,
